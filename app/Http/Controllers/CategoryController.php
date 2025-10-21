@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -21,16 +22,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-       if (auth()->user()->hasRole('super-admin')) {
         $data = Category::whereNull('parent_id') // sirf main categories
             ->orderBy('id', 'DESC')
             ->get();
-    } else {
-        $data = Category::where('created_by', auth()->id())
-            ->whereNull('parent_id')
-            ->orderBy('id', 'DESC')
-            ->get();
-    }  
+    
         return view('admin.category.index', compact('data'));
     }
 
@@ -39,13 +34,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        if (auth()->user()->hasRole('super-admin')) {
-            $categories = Category::where(["status"=>'active'])->whereNull('parent_id')->orderBy('id', 'DESC')->get();
-        } else {
-            $categories = Category::where(['created_by'=> auth()->id(),"status"=>'active'])->whereNull('parent_id')
-                ->orderBy('id', 'DESC')
-                ->get();
-        }       
+        $categories = Category::where(["status"=>'active'])->whereNull('parent_id')->orderBy('id', 'DESC')->get(); 
         return view('admin.category.create', compact('categories'));
     }
 
@@ -60,7 +49,7 @@ class CategoryController extends Controller
 
     // Check if the category already exists
     $exists = Category::where('name', $request->name)
-                ->where('parent_id', $request->parent_id) // same parent
+                ->where('parent_id', $request->parent_id) 
                 ->exists();
 
     if ($exists) {
@@ -99,13 +88,7 @@ class CategoryController extends Controller
     public function edit($category)
     {
         $data = Category::where('id', decrypt($category))->first();
-        if (auth()->user()->hasRole('super-admin')) {
-            $categories = Category::where(["status"=>'active'])->whereNull('parent_id')->orderBy('id', 'DESC')->get();
-        } else {
-            $categories = Category::where(['created_by'=> auth()->id(),"status"=>'active'])->whereNull('parent_id')
-                ->orderBy('id', 'DESC')
-                ->get();
-        }    
+        $categories = Category::where(["status"=>'active'])->whereNull('parent_id')->orderBy('id', 'DESC')->get();
         return view('admin.category.edit', compact('data', 'categories'));
     }
 
@@ -173,19 +156,10 @@ class CategoryController extends Controller
      */
     public function getSubcategories($id)
     {
-    if (auth()->user()->hasRole('super-admin')) {
         $subcategories = Category::where('parent_id', $id)
             ->where('status', 'active')
             ->orderBy('id', 'DESC')
             ->get();
-    }else{
-          $subcategories = Category::where('parent_id', $id)-where('created_by', auth()->id())
-            ->where('status', 'active')
-            ->orderBy('id', 'DESC')
-            ->get();
-
-    }
-
         return response()->json($subcategories);
     }
 }
