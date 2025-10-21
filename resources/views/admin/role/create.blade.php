@@ -8,13 +8,13 @@
                     <div class="card-header">
                         <h3 class="card-title">Create New Role</h3>
                         <div class="card-tools">
-                            <a href="{{ route('admin.role.index') }}"
+                            <a href="{{ route('super-admin.role.index') }}"
                                 class="btn btn-sm btn-dark">Back</a>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="{{ route('admin.role.store') }}" method="POST"
+                    <form action="{{ route('super-admin.role.store') }}" method="POST"
                         class="needs-validation" novalidate="">
                         @csrf
                         <div class="card-body">

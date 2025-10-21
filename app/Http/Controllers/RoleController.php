@@ -7,6 +7,10 @@ use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
+     private function prefix()
+    {
+        return auth()->user()->hasRole('super-admin') ? 'super-admin' : 'admin';
+    }
     public function index()
     {
         $data = Role::orderBy('id','DESC')->get();
@@ -35,7 +39,7 @@ class RoleController extends Controller
         }else{
             $msg = 'Role created successfully.';
         }
-        return redirect()->route('admin.role.index')->with('success',$msg);
+        return redirect()->route($this->prefix() .'.role.index')->with('success',$msg);
     }
 
     public function edit($id)
@@ -47,6 +51,6 @@ class RoleController extends Controller
     public function destroy($id)
     {
         Role::where('id',decrypt($id))->delete();
-        return redirect()->route('admin.role.index')->with('error','Role deleted successfully.');
+        return redirect()->route($this->prefix() .'.role.index')->with('error','Role deleted successfully.');
     }
 }

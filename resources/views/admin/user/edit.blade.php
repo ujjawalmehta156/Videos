@@ -3,10 +3,10 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Edit User</h3>
-            <div class="card-tools"><a href="{{ route('admin.user.index') }}" class="btn btn-sm btn-dark">Back</a></div>
+            <div class="card-tools"><a href="{{ route('super-admin.user.index') }}" class="btn btn-sm btn-dark">Back</a></div>
         </div>
         <div class="card-body">
-            <form action="{{ route('admin.user.update',$user) }}" method="POST">
+            <form action="{{ route('super-admin.user.update',$user) }}" method="POST">
                 @method('PUT')
                 @csrf
                 <input type="hidden" name="id" value="{{ $user->id }}">

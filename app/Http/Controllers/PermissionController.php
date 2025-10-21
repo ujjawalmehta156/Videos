@@ -7,6 +7,11 @@ use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+      private function prefix()
+    {
+        return auth()->user()->hasRole('super-admin') ? 'super-admin' : 'admin';
+    }
+
     public function index()
     {
         $data = Permission::orderBy('id','DESC')->get();
@@ -35,7 +40,7 @@ class PermissionController extends Controller
         }else{
             $msg = 'Permission created successfully.';
         }
-        return redirect()->route('admin.permission.index')->with('success',$msg);
+        return redirect()->route($this->prefix() .'.permission.index')->with('success',$msg);
     }
 
     public function edit($id)
@@ -47,6 +52,6 @@ class PermissionController extends Controller
     public function destroy($id)
     {
         Permission::where('id',decrypt($id))->delete();
-        return redirect()->route('admin.permission.index')->with('error','Permission deleted successfully.');
+        return redirect()->route($this->prefix() .'.permission.index')->with('error','Permission deleted successfully.');
     }
 }

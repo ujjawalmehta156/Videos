@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">User Table</h3>
-            <div class="card-tools"><a href="{{ route('admin.user.create') }}" class="btn btn-sm btn-primary">Add</a></div>
+            <div class="card-tools"><a href="{{ route('super-admin.user.create') }}" class="btn btn-sm btn-primary">Add</a></div>
         </div>
         <div class="card-body">
             <table class="table table-striped" id="userTable">
@@ -25,11 +25,11 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at }}</td>
                             <td>
-                                <a href="{{ route('admin.user.edit', encrypt($user->id)) }}"
+                                <a href="{{ route('super-admin.user.edit', encrypt($user->id)) }}"
                                     class="btn btn-sm btn-primary">Edit</a>
                             </td>
                             <td>
-                                <form action="{{ route('admin.user.destroy', encrypt($user->id)) }}" method="POST"
+                                <form action="{{ route('super-admin.user.destroy', encrypt($user->id)) }}" method="POST"
                                     onsubmit="return confirm('Are sure want to delete?')">
                                     @method('DELETE')
                                     @csrf

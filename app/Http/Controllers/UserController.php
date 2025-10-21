@@ -38,7 +38,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
         ]);
         $user->assignRole($request->role);
-        return redirect()->route('admin.user.index')->with('success','User created successfully.');
+        return redirect()->route('super-admin.user.index')->with('success','User created successfully.');
     }
     public function edit($id)
     {
@@ -57,7 +57,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->save();
         $user->assignRole($request->role);
-        return redirect()->route('admin.user.index')->with('success','User updated successfully.');
+        return redirect()->route('super-admin.user.index')->with('success','User updated successfully.');
     }
     public function destroy($id)
     {

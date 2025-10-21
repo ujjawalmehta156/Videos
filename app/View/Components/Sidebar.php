@@ -4,7 +4,6 @@ namespace App\View\Components;
 
 use App\Models\Category;
 use App\Models\Collection;
-use App\Models\Product;
 use App\Models\SubCategory;
 use App\Models\User;
 use Closure;
@@ -38,8 +37,7 @@ class Sidebar extends Component
         $CollectionCount = Collection::count();
         view()->share('CollectionCount',$CollectionCount);
         
-        $ProductCount = Product::count();
-        view()->share('ProductCount',$ProductCount);
+      
     }
 
     /**

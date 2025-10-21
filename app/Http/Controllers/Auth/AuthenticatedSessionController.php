@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,7 +28,12 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
+            $user = Auth::user();
+            $token = JWTAuth::fromUser($user);
+            session(['api_token' => $token]);
+            session(['role' => $user->role]);
+
 
         return redirect()->intended(RouteServiceProvider::HOME)->with('success','Login successsfully.');
     }

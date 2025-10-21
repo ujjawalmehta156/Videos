@@ -1,10 +1,17 @@
 <x-admin>
     @section('title','Permissions')
+     @php
+        if (auth()->user()->hasRole('super-admin')) {
+            $prefix = 'super-admin';
+        } else {
+            $prefix = 'admin';
+        }
+    @endphp
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Permission</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.permission.create') }}" class="btn btn-sm btn-primary">Add</a>
+                <a href="{{ route( $prefix.'.permission.create') }}" class="btn btn-sm btn-primary">Add</a>
             </div>
         </div>
         <div class="card-body">
@@ -23,13 +30,13 @@
                             <td>{{ $permission->name }}</td>
                             <td>{{ $permission->created_at }}</td>
                             <td>
-                                <a href="{{ route('admin.permission.edit', encrypt($permission->id)) }}"
+                                <a href="{{ route($prefix.'.permission.edit', encrypt($permission->id)) }}"
                                     class="btn btn-sm btn-secondary">
                                     <i class="far fa-edit"></i>
                                 </a>
                             </td>
                             <td>
-                                <form action="{{ route('admin.permission.destroy', encrypt($permission->id)) }}"
+                                <form action="{{ route($prefix.'.permission.destroy', encrypt($permission->id)) }}"
                                     method="POST" onclick="confirm('Are you sure')">
                                     @method('DELETE')
                                     @csrf

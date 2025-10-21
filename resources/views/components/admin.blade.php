@@ -1,12 +1,3 @@
-<!--
-/*!
- *   AdminLTE With Laravel
- *   Author: Nihir Zala
- *   Website: https://nihirz.netlify.app
- *   License: Open source - MIT <https://opensource.org/licenses/MIT>
- */
--->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +19,12 @@
     <link rel="stylesheet" href="{{ asset('admin/plugins/fontawesome-free/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('admin/plugins/jqvmap/jqvmap.min.css') }}">
+    
+    {{-- Only load dashboard CSS on dashboard pages --}}
+    @if(request()->routeIs('*.dashboard'))
+        <link rel="stylesheet" href="{{ asset('admin/plugins/jqvmap/jqvmap.min.css') }}">
+    @endif
+    
     <link rel="stylesheet" href="{{ asset('admin/dist/css/adminlte.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/plugins/daterangepicker/daterangepicker.css') }}">
@@ -63,7 +59,13 @@
                         @endif
                     </div>
                     <div class="info">
-                        <a href="{{ route('admin.dashboard') }}" class="d-block">{{ config('app.name') }}</a>
+                        @role('super-admin')
+                         <a href="{{ route('super-admin.dashboard') }}" class="d-block">{{ config('app.name') }}</a>
+                        @endrole
+
+                        @role('admin')
+                         <a href="{{ route('admin.dashboard') }}" class="d-block">{{ config('app.name') }}</a>
+                        @endrole
                     </div>
                 </div>
                 <!-- Sidebar Menu -->
@@ -103,8 +105,7 @@
     </div>
     <!-- ./wrapper -->
     <footer class="main-footer">
-        <strong>Copyright © 2023-{{ date('Y') }} <a href="nihirz.netlify.app">Zala
-                Nihir</a>.</strong> All rights reserved.
+        <strong>Copyright © 2023-{{ date('Y') }} <a href="nihirz.netlify.app">Video Panel</a>.</strong> All rights reserved.
     </footer>
     <!-- ./wrapper -->
 
@@ -114,15 +115,20 @@
     <script src="{{ asset('admin/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('admin/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- ChartJS -->
-    <script src="{{ asset('admin/plugins/chart.js/Chart.min.js') }}"></script>
-    <!-- Sparkline -->
-    <script src="{{ asset('admin/plugins/sparklines/sparkline.js') }}"></script>
-    <!-- JQVMap -->
-    <script src="{{ asset('admin/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('admin/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-    <!-- jQuery Knob Chart -->
-    <script src="{{ asset('admin/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+    
+    {{-- Dashboard-specific scripts - ONLY load on dashboard pages --}}
+    @if(request()->routeIs('*.dashboard'))
+        <!-- ChartJS -->
+        <script src="{{ asset('admin/plugins/chart.js/Chart.min.js') }}"></script>
+        <!-- Sparkline -->
+        <script src="{{ asset('admin/plugins/sparklines/sparkline.js') }}"></script>
+        <!-- JQVMap -->
+        <script src="{{ asset('admin/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
+        <script src="{{ asset('admin/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="{{ asset('admin/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+    @endif
+    
     <!-- daterangepicker -->
     <script src="{{ asset('admin/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/daterangepicker/daterangepicker.js') }}"></script>
@@ -134,8 +140,12 @@
     <script src="{{ asset('admin/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('admin/dist/js/adminlte.js') }}"></script>
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    <script src="{{ asset('admin/dist/js/pages/dashboard.js') }}"></script>
+    
+    {{-- AdminLTE dashboard demo - ONLY load on dashboard pages --}}
+    @if(request()->routeIs('*.dashboard'))
+        <script src="{{ asset('admin/dist/js/pages/dashboard.js') }}"></script>
+    @endif
+    
     <!-- DataTables -->
     <script src="{{ asset('admin/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('admin/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>

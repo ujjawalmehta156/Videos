@@ -1,5 +1,12 @@
 <x-admin>
     @section('title','Edit Permission')
+    @php
+        if (auth()->user()->hasRole('super-admin')) {
+            $prefix = 'super-admin';
+        } else {
+            $prefix = 'admin';
+        }
+    @endphp
     <section class="content">
         <!-- Default box -->
         <div class="d-flex justify-content-center">
@@ -8,13 +15,13 @@
                     <div class="card-header">
                         <h3 class="card-title">Edit Permission</h3>
                         <div class="card-tools">
-                            <a href="{{ route('admin.permission.index') }}"
+                            <a href="{{ route( $prefix.'.permission.index') }}"
                                 class="btn btn-sm btn-dark">Back</a>
                         </div>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="{{ route('admin.permission.store') }}" method="POST"
+                    <form action="{{ route($prefix.'.permission.store') }}" method="POST"
                         class="needs-validation" novalidate="">
                         @csrf
                         <input type="hidden" name="id" value="{{ $data->id }}">

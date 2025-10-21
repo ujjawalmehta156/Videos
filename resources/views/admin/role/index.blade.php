@@ -1,10 +1,17 @@
 <x-admin>
     @section('title','Roles')
+      @php
+        if (auth()->user()->hasRole('super-admin')) {
+            $prefix = 'super-admin';
+        } else {
+            $prefix = 'admin';
+        }
+    @endphp
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Roles</h3>
             <div class="card-tools">
-                <a href="{{ route('admin.role.create') }}" class="btn btn-sm btn-primary">Add</a>
+                <a href="{{ route($prefix.'.role.create') }}" class="btn btn-sm btn-primary">Add</a>
             </div>
         </div>
         <div class="card-body">
@@ -23,12 +30,12 @@
                             <td>{{ $role->name }}</td>
                             <td>{{ $role->created_at }}</td>
                             <td>
-                                <a href="{{ route('admin.role.edit',encrypt($role->id)) }}" class="btn btn-sm btn-secondary">
+                                <a href="{{ route($prefix.'.role.edit',encrypt($role->id)) }}" class="btn btn-sm btn-secondary">
                                     <i class="far fa-edit"></i>
                                 </a>
                             </td>
                             <td>
-                                <form action="{{ route('admin.role.destroy',encrypt($role->id)) }}" method="POST" onclick="confirm('Are you sure')">
+                                <form action="{{ route($prefix.'.role.destroy',encrypt($role->id)) }}" method="POST" onclick="confirm('Are you sure')">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-danger">
