@@ -35,9 +35,9 @@
                                     <div class="form-group">
                                         <label for="category">Category</label>
                                         <select name="category" id="category" class="form-control" required>
-                                            <option value="" selected disabled>Select category</option>
+                                            <option value="" selected >Select category</option>
                                             @foreach ($category as $cat)
-                                                <option {{ old('category') == $cat->id ? 'selected' : '' }} value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                                <option {{ old('category') == $cat->uuid ? 'selected' : '' }} value="{{ $cat->uuid }}">{{ $cat->name }}</option>
                                             @endforeach
                                         </select>
                                         <x-error>category</x-error>
@@ -127,9 +127,9 @@ $(document).ready(function() {
             type: 'GET',
             dataType: 'json',
             success: function(data) {
-                var options = '<option value="" disabled selected>Select subcategory</option>';
+                var options = '<option value=""  selected>Select subcategory</option>';
                 $.each(data, function(index, subcat) {
-                    options += '<option value="' + subcat.id + '">' + subcat.name + '</option>';
+                    options += '<option value="' + subcat.uuid + '">' + subcat.name + '</option>';
                 });
                 $subcategorySelect.html(options);
             },

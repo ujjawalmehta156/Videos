@@ -22,11 +22,11 @@
                     </div>
 
                     <form class="needs-validation" novalidate
-                          action="{{ route($prefix . '.category.update', $data->id) }}"
+                          action="{{ route($prefix . '.category.update', $data->uuid) }}"
                           method="POST">
                         @method('PUT')
                         @csrf
-                        <input type="hidden" name="id" value="{{ $data->id }}">
+                        <input type="hidden" name="id" value="{{ $data->uuid }}">
 
                         <div class="card-body">
                             <!-- Category Name -->
@@ -48,8 +48,8 @@
                                 <select name="parent_id" id="parent_id" class="form-control">
                                     <option value="">-- None (Main Category) --</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}"
-                                            {{ $data->parent_id == $category->id ? 'selected' : '' }}>
+                                        <option value="{{ $category->uuid }}"
+                                            {{ $data->parent_id == $category->uuid ? 'selected' : '' }}>
                                             {{ $category->name }}
                                         </option>
                                     @endforeach

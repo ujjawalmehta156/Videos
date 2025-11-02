@@ -74,10 +74,10 @@ class PublicVideoController extends Controller
 
         $category = Category::where(['uuid' => $uuid, 'status' => 'active'])->firstOrFail();
 
-        $query = Collection::where('cat_id', $category->id)
+        $query = Collection::where('cat_id', $category->uuid)
             ->where('visibility', 'public')
             ->where('video_status', 'active')
-            ->with(['meta', 'videoStreams', 'category', 'subcategory']);
+            ->with(['meta', 'videoStreams', 'category', 'subcategory','creator']);
 
         switch ($sort) {
             case 'oldest':
@@ -120,7 +120,7 @@ class PublicVideoController extends Controller
         $sort = $request->get('sort', 'latest');
 
         $query = Collection::where('visibility', 'public')
-            ->with(['meta', 'videoStreams', 'category', 'subcategory']);
+            ->with(['meta', 'videoStreams', 'category', 'subcategory','creator']);
 
         if ($request->filled('category_id')) {
             $query->where('cat_id', $request->category_id);
@@ -181,7 +181,7 @@ class PublicVideoController extends Controller
         $video = Collection::where('uuid', $uuid)
             ->where('visibility', 'public')
             ->where('video_status', 'active')
-            ->with(['meta', 'videoStreams', 'category', 'subcategory'])
+            ->with(['meta', 'videoStreams', 'category', 'subcategory','creator'])
             ->first();
 
         if (!$video) {

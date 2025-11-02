@@ -20,7 +20,7 @@
                 <form class="needs-validation" novalidate action="{{ route($prefix.'.collection.update', $collection) }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
-                    <input type="hidden" name="edit_id" value="{{ $collection->id }}">
+                    <input type="hidden" name="edit_id" value="{{ $collection->uuid }}">
                     <div class="card-body">
                         <div class="row">
                             {{-- Name --}}
@@ -37,9 +37,9 @@
                                 <div class="form-group">
                                     <label for="category">Category</label>
                                     <select name="category" id="category" class="form-control" required>
-                                        <option value="" selected disabled>Select category</option>
+                                        <option value="">Select category</option>
                                         @foreach ($category as $cat)
-                                            <option {{ old('category', $collection->cat_id) == $cat->id ? 'selected' : '' }} value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                            <option {{ old('category', $collection->cat_id) == $cat->uuid ? 'selected' : '' }} value="{{ $cat->uuid }}">{{ $cat->name }}</option>
                                         @endforeach
                                     </select>
                                     <x-error>category</x-error>
@@ -143,7 +143,7 @@ $(document).ready(function() {
                 $.each(data, function(index, subcat) {
                     var selected = '';
                     if(subcat.id == {{ $data->subcategory_id ?? 'null' }}) selected = 'selected';
-                    options += '<option value="' + subcat.id + '" '+selected+'>' + subcat.name + '</option>';
+                    options += '<option value="' + subcat.uuid + '" '+selected+'>' + subcat.name + '</option>';
                 });
                 $subcategorySelect.html(options);
             },

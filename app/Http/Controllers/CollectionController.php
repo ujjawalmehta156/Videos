@@ -44,7 +44,7 @@ public function __construct(ImageService $imageService)
         if (Auth::user()->hasRole('super-admin')) {
             $data = Collection::orderBy('id', 'DESC')->get();
         }else{
-            $data = Collection::where('created_by', Auth::id())->orderBy('id', 'DESC')->get();
+            $data = Collection::where('created_by', Auth::id())->orderBy('uuid', 'DESC')->get();
         }
         return view('admin.collection.index', compact('data'));
     }
@@ -126,7 +126,7 @@ public function store(Request $request)
 
     // Meta save करो
     CollectionMeta::create([
-        'collection_id' => $collection->id,
+        'collection_id' => $collection->uuid,
         'meta_title' => $request->meta_title,
         'meta_keywords' => $request->meta_keywords,
         'meta_description' => $request->meta_description,
@@ -140,7 +140,7 @@ public function store(Request $request)
 
     public function edit($id)
     {
-        $collection = Collection::where('id', decrypt($id))->first();
+        $collection = Collection::where('uuid', decrypt($id))->first();
         $meta = $collection->meta;
         $videoStream = $collection->videoStream;
         return view('admin.collection.edit', compact('collection', 'meta'));
@@ -149,7 +149,7 @@ public function store(Request $request)
 public function update(Request $request)
 {
     $request->validate([
-        'edit_id' => 'required|exists:collections,id',
+        'edit_id' => 'required|exists:collections,uuid',
         'name' => 'required|max:255',
         'category' => 'required',
         'subcategory' => 'nullable',
@@ -184,22 +184,15 @@ public function update(Request $request)
         } else {
             $relativePath = $absolutePath; // fallback
         }
-
         $collection->setVideoPath($relativePath);
         $collection->save();
-
-        // Queue HLS conversion
         QueueHLSConversion::dispatch($collection);
-
-        // Metadata extract
         $getID3 = new \getID3;
         $videoInfo = $getID3->analyze($absolutePath);
         $fileSizeMb = round(filesize($absolutePath)/1024/1024, 2);
-
         $resolution = 'unknown';
         $bitrate_kbps = 0;
         $codec = 'unknown';
-
         if (!empty($videoInfo['video'])) {
             $resolution = ($videoInfo['video']['resolution_x'] ?? 'unknown') . 'x' . ($videoInfo['video']['resolution_y'] ?? 'unknown');
             $bitrate_kbps = isset($videoInfo['bitrate']) ? intval($videoInfo['bitrate']) / 1000 : 0;
@@ -207,7 +200,7 @@ public function update(Request $request)
         }
 
         VideoStream::updateOrCreate(
-            ['collection_id' => $collection->id],
+            ['collection_id' => $collection->uuid],
             [
                 'resolution' => $resolution,
                 'bitrate_kbps' => $bitrate_kbps,
@@ -218,7 +211,7 @@ public function update(Request $request)
         );
            // Meta update
     CollectionMeta::updateOrCreate(
-        ['collection_id' => $collection->id],
+        ['collection_id' => $collection->uuid],
         [
             'meta_title' => $request->meta_title,
             'meta_keywords' => $request->meta_keywords,
@@ -227,18 +220,12 @@ public function update(Request $request)
     );
 
     }
-
- 
     return redirect()->route($this->prefix() . '.collection.index')
         ->with('info', 'Collection updated successfully. HLS conversion running in background.');
 }
-
-
-
-
     public function destroy($id)
     {
-        $collection = Collection::where('id', decrypt($id))->first();
+        $collection = Collection::where('uuid', decrypt($id))->first();
 
         $oldImage = $collection->image;
         $image_path = public_path('collection-image/' . $oldImage);

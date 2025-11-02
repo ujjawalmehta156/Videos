@@ -16,7 +16,7 @@ class Category extends Model
     // Children relationship (subcategories)
     public function subcategories()
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id','uuid');
     }
 
     // Parent relationship

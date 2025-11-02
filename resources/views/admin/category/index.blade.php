@@ -32,10 +32,10 @@
                 <tbody>
                     @foreach ($data as $cat)
                         {{-- Main Parent --}}
-                        <tr class=" parent-row" data-parent-id="{{ $cat->id }}">
+                        <tr class=" parent-row" data-parent-id="{{ $cat->uuid }}">
                             <td>
                                 @if($cat->subcategories && $cat->subcategories->count() > 0)
-                                    <button class="btn btn-sm btn-link p-0 toggle-children" data-parent-id="{{ $cat->id }}">
+                                    <button class="btn btn-sm btn-link p-0 toggle-children" data-parent-id="{{ $cat->uuid }}">
                                         <i class="fas fa-chevron-down"></i>
                                     </button>
                                 @endif
@@ -49,11 +49,11 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route($prefix . '.category.edit', encrypt($cat->id)) }}"
+                                <a href="{{ route($prefix . '.category.edit', encrypt($cat->uuid)) }}"
                                     class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                             </td>
                             <td>
-                                <form action="{{ route($prefix . '.category.destroy', encrypt($cat->id)) }}"
+                                <form action="{{ route($prefix . '.category.destroy', encrypt($cat->uuid)) }}"
                                     method="POST" onsubmit="return confirm('Are you sure?')">
                                     @method('DELETE')
                                     @csrf
@@ -65,10 +65,10 @@
                         {{-- Children --}}
                         @if($cat->subcategories && $cat->subcategories->count() > 0)
                             @foreach ($cat->subcategories as $child)
-                                <tr class="child-row" data-parent-id="{{ $cat->id }}" data-child-id="{{ $child->id }}" style="display: none;">
+                                <tr class="child-row" data-parent-id="{{ $cat->uuid }}" data-child-id="{{ $child->uuid }}" style="display: none;">
                                     <td style="padding-left: 30px;">
                                         @if($child->subcategories && $child->subcategories->count() > 0)
-                                            <button class="btn btn-sm btn-link p-0 toggle-subchildren" data-child-id="{{ $child->id }}">
+                                            <button class="btn btn-sm btn-link p-0 toggle-subchildren" data-child-id="{{ $child->uuid }}">
                                                 <i class="fas fa-chevron-down"></i>
                                             </button>
                                         @endif
@@ -82,7 +82,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="{{ route($prefix . '.category.edit', encrypt($child->id)) }}"
+                                        <a href="{{ route($prefix . '.category.edit', encrypt($child->uuid)) }}"
                                             class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></a>
                                     </td>
                                     <td>
@@ -100,7 +100,7 @@
                                 {{-- Sub-children --}}
                                 @if($child->subcategories && $child->subcategories->count() > 0)
                                     @foreach ($child->subcategories as $subChild)
-                                        <tr class="subchild-row" data-child-id="{{ $child->id }}" style="display: none;">
+                                        <tr class="subchild-row" data-child-id="{{ $child->uuid }}" style="display: none;">
                                             <td style="padding-left: 60px;">
                                                 <i class="fas fa-level-up-alt fa-rotate-90"></i>
                                                 <i class="fas fa-level-up-alt fa-rotate-90"></i>
@@ -109,13 +109,13 @@
                                             <td>{{ $child->name }}</td>
                                             <td><span class="badge bg-secondary">Sub-sub</span></td>
                                             <td>
-                                                <a href="{{ route($prefix . '.category.edit', encrypt($subChild->id)) }}"
+                                                <a href="{{ route($prefix . '.category.edit', encrypt($subChild->uuid)) }}"
                                                     class="btn btn-sm btn-primary">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
                                             </td>
                                             <td>
-                                                <form action="{{ route($prefix . '.category.destroy', encrypt($subChild->id)) }}"
+                                                <form action="{{ route($prefix . '.category.destroy', encrypt($subChild->iuuidd)) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('Are you sure?')">
                                                     @method('DELETE')
